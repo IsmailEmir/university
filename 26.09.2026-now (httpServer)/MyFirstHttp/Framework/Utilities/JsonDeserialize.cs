@@ -8,7 +8,7 @@ public class JsonDeserialize
 {
     private static ServerSettings _settings = Deserialize();
     
-    public static Server GetServer => _settings;
+    public static ServerSettings GetServer => _settings;
 
     private static ServerSettings Deserialize()
     {
@@ -17,15 +17,15 @@ public class JsonDeserialize
         {
             var result =  JsonSerializer.Deserialize<ServerSettings>(File.ReadAllText(jsonPath)) ?? new ServerSettings();
 
-            if (!_settings.Server.Path.StartsWith("/"))
-            {
-                _settings.Server.Path = "/" + _settings.Server.Path;
-            }
-
-            if (!_settings.Server.Path.EndsWith("/"))
-            {
-                _settings.Server.Path += "/";
-            }
+            // if (!_settings.Server.Path.StartsWith("/"))
+            // {
+            //     _settings.Server.Path = "/" + _settings.Server.Path;
+            // }
+            //
+            // if (!_settings.Server.Path.EndsWith("/"))
+            // {
+            //     _settings.Server.Path += "/";
+            // }
             
             return result;
         }

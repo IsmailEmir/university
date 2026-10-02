@@ -1,6 +1,5 @@
+using System.IO.Pipelines;
 using System.Net;
-using System.Text.Json;
-using MyFirstHttp.Framework.Configuration;
 using MyFirstHttp.Framework.Utilities;
 
 namespace MyFirstHttp.Framework.Http;
@@ -8,38 +7,25 @@ namespace MyFirstHttp.Framework.Http;
 public class HttpServer
 {
     private readonly HttpListener _listener = new();
+    
 
-    public HttpServer()
+    private void Start()
     {
-        var _settings = JsonDeserialize.GetServer();
+        var server = JsonDeserialize.GetServer;
+        var uri = FabricUri.CreateUri(server);
         
-        string prefix = $"http://{_settings.Server.Host}:{_settings.Server.Port}{_settings.Server.Path}";
-
-        _listener.Prefixes.Add(prefix);
-    }
-
-    private void Log(string message)
-    {
-        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] {message}");
-    }
-
-    public async Task StartAsync()
-    {
-        if (_listener.IsListening)
-        {
-            Log("Сервер уже запущен.");
-            return;
-        }
-
+        var prefix = uri.AbsoluteUri;
+        _listener.Prefixes.Add(uri.AbsoluteUri);
+        
+        
+        
         _listener.Start();
-        Log("Сервер запущен.");
-
-        string prefix = $"http://{_settings.Server.Host}:{_settings.Server.Port}{_settings.Server.Path}";
-
-        Log($"Адрес: {prefix}");
+        
+        LogMessage.PrintLog("Сервер запущен.");
+        LogMessage.PrintLog($"Адрес: {prefix}");
     }
 
-    public async Task GetContextAsync()
+    private async Task GetContextAsync()
     {
 
         while (_listener.IsListening)
@@ -48,14 +34,14 @@ public class HttpServer
             {
                 var context = await _listener.GetContextAsync();
                 
-                Log(
+                LogMessage.PrintLog(
                     $"Получен запрос: " +
                     $"{context.Request.HttpMethod} {context.Request.RawUrl}"
                 );
 
                 await HandleRequestAsync(context);
 
-                Log("Ответ отправлен.");
+                LogMessage.PrintLog("Ответ отправлен.");
             }
             catch (HttpListenerException)
             {
@@ -71,65 +57,44 @@ public class HttpServer
     private async Task HandleRequestAsync(HttpListenerContext context)
     {
         string path = context.Request.Url?.AbsolutePath ?? "";
-        string serverPath = _settings.Server.Path;
-
-        string filePath;
-        string contentType;
-
-        if (path == serverPath || path == serverPath.TrimEnd('/'))
-        {
-            filePath = Path.Combine(
-                AppContext.BaseDirectory,
-                "wwwroot",
-                "index.html"
-            );
-            contentType = "text/html; charset=utf-8";
-        }
-        else if (path == serverPath + "styles.css")
-        {
-            filePath = Path.Combine(
-                AppContext.BaseDirectory,
-                "wwwroot",
-                "styles.css"
-            );
-            contentType = "text/css; charset=utf-8";
-        }
-        else
-        {
-            context.Response.StatusCode = 404;
-            context.Response.Close();
-            Log($"Файл не найден: {path}");
-            return;
-        }
-
-        if (!File.Exists(filePath))
-        {
-            context.Response.StatusCode = 404;
-            context.Response.Close();
-
-            Log($"Файл не найден: {filePath}");
-
-            return;
-        }
-
-        byte[] buffer = await File.ReadAllBytesAsync(filePath);
+        var filePath =  Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", path.Trim('/'));
+        
         var response = context.Response;
-
-        response.ContentType = contentType;
+        
+        HttpChecker.HttpCheck(response, ref filePath);
+        
+        var fileInfo = new FileInfo(filePath);
+        MimeTypeChecker.CheckType(response, fileInfo);
+        
+        byte[] buffer = await File.ReadAllBytesAsync(filePath);
         response.ContentLength64 = buffer.Length;
-
         await response.OutputStream.WriteAsync(buffer);
-        response.Close();
+        await response.OutputStream.FlushAsync();
     }
 
-    public void Stop()
+    public void Run()
     {
-        if (!_listener.IsListening)
+        while (!_listener.IsListening)
         {
-            Log("Сервер уже остановлен.");
-            return;
+            LogMessage.PrintMenu();
+            ConsoleCommands.ActivateCommand(_listener);
         }
-        _listener.Stop();
-        Log("Сервер остановлен.");
+        
+        var task1 = Task.Run(() => ConsoleCommands.ActivateCommand(_listener));
+        
+        Start();
+        var task2 = Task.Run(async () => await GetContextAsync());
+        Task.WaitAll(task1, task2);
     }
+
+    // public void Stop()
+    // {
+    //     if (!_listener.IsListening)
+    //     {
+    //         LogMessage.PrintLog("Сервер уже остановлен.");
+    //         return;
+    //     }
+    //     _listener.Stop();
+    //     LogMessage.PrintLog("Сервер остановлен.");
+    // }
 }
