@@ -6,7 +6,7 @@ namespace MyFirstHttp.Framework.Http;
 
 public class HttpServer
 {
-    private readonly HttpListener _listener = new();
+    private HttpListener _listener = new();
     
 
     private void Start()
@@ -16,7 +16,6 @@ public class HttpServer
         
         var prefix = uri.AbsoluteUri;
         _listener.Prefixes.Add(uri.AbsoluteUri);
-        
         
         
         _listener.Start();
@@ -78,11 +77,12 @@ public class HttpServer
         {
             LogMessage.PrintMenu();
             ConsoleCommands.ActivateCommand(_listener);
+            Start();
         }
         
+
         var task1 = Task.Run(() => ConsoleCommands.ActivateCommand(_listener));
         
-        Start();
         var task2 = Task.Run(async () => await GetContextAsync());
         Task.WaitAll(task1, task2);
     }

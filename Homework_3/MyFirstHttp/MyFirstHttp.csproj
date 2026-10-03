@@ -23,6 +23,18 @@
         <None Update="wwwroot\cat.jpg">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+
+        <None Update="wwwroot\engine\index.html">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+        <None Update="wwwroot\engine\styles.css">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+
+        <None Update="wwwroot\rockstar\index.html">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
