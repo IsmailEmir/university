@@ -1,5 +1,6 @@
 using System.IO.Pipelines;
 using System.Net;
+using MyFirstHttp.Framework.Handlers;
 using MyFirstHttp.Framework.Utilities;
 
 namespace MyFirstHttp.Framework.Http;
@@ -7,6 +8,17 @@ namespace MyFirstHttp.Framework.Http;
 public class HttpServer
 {
     private HttpListener _listener = new();
+    private IRequestHandler _handlerChain;
+
+    public HttpServer()
+    {
+        var fileHandler = new StaticFileHandler();
+        var controllerHandler = new ControllerHandler();
+        
+        fileHandler.SetSuccessor(controllerHandler);
+        
+        _handlerChain = fileHandler;
+    }
     
 
     private void Start()
@@ -38,7 +50,7 @@ public class HttpServer
                     $"{context.Request.HttpMethod} {context.Request.RawUrl}"
                 );
 
-                await HandleRequestAsync(context);
+                await _handlerChain.HandleAsync(context);
 
                 LogMessage.PrintLog("Ответ отправлен.");
             }
@@ -52,25 +64,7 @@ public class HttpServer
             }
         }
     }
-
-    private async Task HandleRequestAsync(HttpListenerContext context)
-    {
-        string path = context.Request.Url?.AbsolutePath ?? "";
-        var filePath =  Path.Combine(Directory.GetCurrentDirectory(),"wwwroot", path.Trim('/'));
-        
-        var response = context.Response;
-        
-        HttpChecker.HttpCheck(response, ref filePath);
-        
-        var fileInfo = new FileInfo(filePath);
-        MimeTypeChecker.CheckType(response, fileInfo);
-        
-        byte[] buffer = await File.ReadAllBytesAsync(filePath);
-        response.ContentLength64 = buffer.Length;
-        await response.OutputStream.WriteAsync(buffer);
-        await response.OutputStream.FlushAsync();
-    }
-
+    
     public void Run()
     {
         while (!_listener.IsListening)
@@ -80,10 +74,9 @@ public class HttpServer
             Start();
         }
         
-
         var task1 = Task.Run(() => ConsoleCommands.ActivateCommand(_listener));
-        
         var task2 = Task.Run(async () => await GetContextAsync());
+        
         Task.WaitAll(task1, task2);
     }
 
