@@ -366,8 +366,8 @@ fieldset {
     justify-content: center;
     align-items: center;
     position: absolute;
-    bottom: 0;
     left: 50%;
+    bottom: 0;
     transform: translateX(-50%);
 }
 

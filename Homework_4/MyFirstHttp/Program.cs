@@ -14,5 +14,3 @@ var fileHandler = new StaticFileHandler(controllerHandler);
 var server = new HttpServer(fileHandler);
 
 server.Run();
-
-SteamController.SendMessage("ismailemirkoc07@gmail.com", "yOoqOVMCcY");

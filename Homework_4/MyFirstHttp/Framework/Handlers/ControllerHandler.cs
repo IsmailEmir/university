@@ -47,9 +47,6 @@ public class ControllerHandler : IRequestHandler
             object?[] args = await ParameterBinder.BindAsync(context.Request, descriptor.Parameters);
             object? result = descriptor.Method.Invoke(descriptor.Controller, args);
             
-            // TODO: преобразовать в байт в зависимости от типа объекта
-            
-            // TODO: в нашем учебном сервере action возвращает html
             await HttpResponseWriter.WriteAsync(response, 200, "text/plain; charset=utf-8", result?.ToString() ?? "OK");
             return true;
         }

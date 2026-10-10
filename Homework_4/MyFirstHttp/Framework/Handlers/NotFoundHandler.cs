@@ -18,7 +18,7 @@ public class NotFoundHandler : IRequestHandler
             await HttpResponseWriter.WriteAsync(context.Response, 404, contentType, buffer);
             return true;
         }
-        
+
         await HttpResponseWriter.WriteAsync(context.Response, 404, "text/html; charset=utf-8", "<h1>404 Not Found</h1>");
         return true;
     }
