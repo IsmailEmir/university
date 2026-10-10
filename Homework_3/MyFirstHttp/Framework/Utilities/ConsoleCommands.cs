@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using MyFirstHttp.Framework.Http;
 
 namespace MyFirstHttp.Framework.Utilities;
@@ -7,7 +7,8 @@ public class ConsoleCommands
 {
     public static void ActivateCommand(HttpListener listener)
     {
-        var command = Console.ReadLine()!.ToLower();
+        var command = Console.ReadLine()?.ToLower() ?? string.Empty;
+
         if (command == "")
         {
             Console.WriteLine("Please enter a valid command.");

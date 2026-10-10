@@ -1,13 +1,14 @@
 using System.Net;
+using MyFirstHttp.Framework.Abstractions;
 using MyFirstHttp.Framework.Http;
 
 namespace MyFirstHttp.Framework.Handlers;
 
 public class StaticFileHandler : IRequestHandler
 {
-    private IRequestHandler _successor;
+    private readonly IRequestHandler _successor;
 
-    public void SetSuccessor(IRequestHandler successor)
+    public StaticFileHandler(IRequestHandler successor)
     {
         _successor = successor;
     }
@@ -15,57 +16,27 @@ public class StaticFileHandler : IRequestHandler
     public async Task<bool> HandleAsync(HttpListenerContext context)
     {
         string path = context.Request.Url?.AbsolutePath ?? "/";
-        
+
         if (path == "/") path = "/index.html";
-        bool hasDot = path.Contains(".");
-        
-        if (hasDot)
-        {
-            string cleanPath = path.Replace('\\', '/').TrimStart('/');
-            
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", cleanPath);
-            var response = context.Response;
 
-            if (File.Exists(filePath))
-            {
-                var fileInfo = new FileInfo(filePath);
-                MimeTypeChecker.CheckType(response, fileInfo);
-                
-                byte[] buffer = await File.ReadAllBytesAsync(filePath);
-                response.ContentLength64 = buffer.Length;
-                await response.OutputStream.WriteAsync(buffer);
-                await response.OutputStream.FlushAsync();
-                
-                response.Close();
-                
-                return true;
-            }
-
-            response.StatusCode = 404;
-            var filePath404 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "404.html");
-
-            if (File.Exists(filePath404))
-            {
-                var fileInfo = new FileInfo(filePath404);
-
-                byte[] buffer = await File.ReadAllBytesAsync(filePath404);
-                response.ContentLength64 = buffer.Length;
-                await response.OutputStream.WriteAsync(buffer);
-                await response.OutputStream.FlushAsync();
-            }
-            else
-            {
-                await response.OutputStream.WriteAsync("<h1>404 Not Found</h1>"u8.ToArray());
-            }
-            response.Close();
-            return true;
-        }
-
-        if (_successor != null)
+        if (!path.Contains("."))
         {
             return await _successor.HandleAsync(context);
         }
-        
-        return false;
+
+        string wwwrootPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "wwwroot"));
+        string cleanPath = path.Replace('\\', '/').TrimStart('/');
+        string filePath = Path.GetFullPath(Path.Combine(wwwrootPath, cleanPath));
+
+        if (filePath.StartsWith(wwwrootPath + Path.DirectorySeparatorChar, StringComparison.Ordinal) && File.Exists(filePath))
+        {
+            var fileInfo = new FileInfo(filePath);
+            string contentType = MimeTypeChecker.CheckType(fileInfo);
+            byte[] buffer = await File.ReadAllBytesAsync(filePath);
+            await HttpResponseWriter.WriteAsync(context.Response, 200, contentType, buffer);
+            return true;
+        }
+
+        return await _successor.HandleAsync(context);
     }
 }

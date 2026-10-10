@@ -1,12 +1,10 @@
-﻿using System.Net;
-
 namespace MyFirstHttp.Framework.Http;
 
 public class MimeTypeChecker
 {
-    public static void CheckType(HttpListenerResponse response, FileInfo fileInfo)
+    public static string CheckType(FileInfo fileInfo)
     {
-        response.ContentType = fileInfo.Extension.ToLower() switch
+        return fileInfo.Extension.ToLower() switch
         {
             ".html" or ".htm" => "text/html; charset=utf-8",
             ".css" => "text/css; charset=utf-8",
@@ -33,7 +31,7 @@ public class MimeTypeChecker
             ".avi" => "video/x-msvideo",
         
             ".mp3" => "audio/mpeg",
-            ".wav" => "audio/wav",
+            ".m4a" => "audio/mp4",
             ".ogg" => "audio/ogg",
         
             ".pdf" => "application/pdf",

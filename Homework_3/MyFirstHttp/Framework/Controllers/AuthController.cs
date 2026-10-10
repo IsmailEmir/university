@@ -2,13 +2,12 @@ using MyFirstHttp.Framework.Attributes;
 
 namespace MyFirstHttp.Framework.Controllers;
 
-[Controller]
-public class Auth
+[Controller("auth")]
+public class Auth : ControllerBase
 {
-    public string Route { get; } = "auth";
-    
     public Auth()
-    {}
+    {
+    }
 
     [HttpPost]
     public string Login(string email, string password)
