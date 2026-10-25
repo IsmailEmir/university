@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter,PT Sans Caption,serif;
+}
+
+
+/* HEADER */
+
+header {
+    height: 40px;
+    width: 100%;
+    background: rgba(249,250,254,.2);
+    border: 1px solid #efefef;
+    box-shadow: inset 0 -5px 10px hsla(0,0%,94%,.35);
+    font-size: 13px;
+    line-height: 20px;
+    cursor: pointer;
+    align-items: center;
+}
+
+.header-btn-menu {
+    display: flex;
+    max-width: 1200px;
+    height: 40px; /* захардкодил */
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.header-btn-menu-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+    margin-right: auto;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+}
+
+.header-btn-text {
+    margin: 0px 5px;
+}
+
+.address-btn {
+    color: #f33;
+}
+
+.header-btn-menu-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+    align-items: center;
+    gap: 30px;
+}
+
+.actions-btn {
+    font-size: 14px;
+    color: #309;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.actions-btn svg path {
+    fill: #309;
+    transition: fill 0.3s;
+}
+
+.actions-btn:hover {
+    color: #f33;
+    transition: color 0.3s;
+}
+
+.actions-btn:hover svg path {
+    fill: #f33;
+    transition: fill 0.3s;
+}
+
+.account-btn {
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #efefef;
+}
+
+
+/* HEADER-MIDDLE */
+
+.header-middle {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 1200px;
+    height: 48px;
+    margin-top: 30px;
+    color: #efefef;
+    padding: 0 30px;
+    justify-content: flex-start;
+}
+
+.animated-logo {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    border: 1px solid #eee;
+    height: 48px;
+    width: 100%;
+    border-radius: 4px;
+    background: #f9fafe;
+    outline: none;
+    box-shadow: inset 0 0 10px #f0f0f0;
+}
+
+#search-bar-id {
+    background: transparent;
+    border: 0;
+    width: 100%;
+    height: 100%;
+    padding: 6px 35px 12px 35px;
+}
+
+.header-middle-right {
+    display: flex;
+    height: 25px;
+    align-items: center;
+}
