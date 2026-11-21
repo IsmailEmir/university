@@ -91,7 +91,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHttpServer.Framework.Un
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHttpServer.Framework", "MiniHttpServer.Framework\MiniHttpServer.Framework.csproj", "{B12484ED-4DBD-4089-957D-0D3B843261F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM", "ORM\ORM.csproj", "{BAB8C1D3-B921-448B-B868-1A7BF0CF44F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHttpServer.ORM", "MiniHttpServer.ORM\MiniHttpServer.ORM.csproj", "{BAB8C1D3-B921-448B-B868-1A7BF0CF44F7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniHttpServer.ORM.UnitTests", "MiniHttpServer.ORM.UnitTests\MiniHttpServer.ORM.UnitTests.csproj", "{699C22E4-2C51-4F2D-B688-3D3296C446B5}"
 EndProject

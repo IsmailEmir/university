@@ -14,7 +14,7 @@
     <PackageReference Include="MSTest" Version="4.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../ORM/ORM.csproj" />
+    <ProjectReference Include="..\MiniHttpServer.ORM\MiniHttpServer.ORM.csproj" />
   </ItemGroup>
 
 </Project>
