@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>${Page.Title}</title>
+</head>
+<body>
+    <h1>${Page.Header}</h1>
+    $if(User.IsAuthenticated)
+    <p>Привет, ${User.Name}! Ваш статус: ${User.Status}</p>
+    $else
+    <p>Гость, пожалуйста, войдите на сайт.</p>
+    $endif
+    <ul>
+    $foreach(var item in Page.Items)
+        <li>${item.Name} — ${item.Price} руб.</li>
+    $endfor
+    </ul>
+    <footer>© ${Page.Year} ${Page.SiteName}</footer>
+</body>
+</html>
