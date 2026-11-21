@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="/home/ismailemirkoch/Repositories/university/HomeWork_6/Homework_6/MiniHttpServer/MiniHttpServer.csproj" />
+    <ProjectReference Include="/home/ismailemirkoch/Repositories/university/HomeWork_6/Homework_6/MiniHttpServer.HtmlTemplating/MiniHttpServer.HtmlTemplating.csproj" />
+  </ItemGroup>
+
+</Project>
